@@ -1,28 +1,23 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class UserController extends Controller
 {
     /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
+     * Display a listing of the resource.
      */
-    public function toArray(Request $request): array
+    public function index()
     {
-        return [
-            'id' => $this->id,
-            'theme_id' => $this->theme_id,
-            'name' => $this->name,
-            'email' => $this->email,
-            'bio' => $this->bio,
-            'image' => url('/') . $this->image,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-        ];
+        try {
+            return response()->json(new UserResource(auth()->user()), 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
 }
